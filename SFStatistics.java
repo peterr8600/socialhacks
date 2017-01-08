@@ -80,9 +80,7 @@ public class SFStatistics{
 	}
 
 	int rPop = calculatePop(boroughs, getIndexOfRace(r));
-	for(String b : boroughs){
-	    System.out.println("Borough" + b);
-	}
+	
 	int totPop = getTotalPop(boroughs);
 	double pctPop = (double)rPop / totPop * 100;
 

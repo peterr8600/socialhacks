@@ -5,17 +5,24 @@ import java.awt.Color;
 
 public class SFVisualizer
 {   
-    public static void main(String[] arg) throws IOException{
-	
-    }
-
     public static void visualizeData(String[] r, String[] b, String[] s) 
 	throws IOException
     {        
 	SFDataPt[] dataset = 
 	    SFFileParser.parseFile("2014_cleaned.csv");
 	String[] boroughs = b;
-	String[] races = r;
+	if(boroughs.length == 0){
+	    String[] boroughs1 = {"MANHATTAN", "BROOKLYN", "BRONX", "QUEENS", 
+			"STATEN ISLAND"};
+	    boroughs = boroughs1;
+	}
+
+	String[] races = convertRace(r);
+	if(races.length == 0){
+	    String[] races1 = {"I", "A", "B", "P", "W", "Q", "X", "Z"};
+	    races = races1;
+	}
+
 	String[] searchVariables = s;
        	
 	SFDataPt[] filtDataset = filterByRaces(dataset, races);
@@ -30,6 +37,10 @@ public class SFVisualizer
 	StdDraw.setXscale(minX, maxX);
 	StdDraw.setYscale(minY, maxY);
 	
+	for(int i = 0; i < races.length; i++){
+	    System.out.println(SFStatistics.getPctPop(dataset, r[i], races[i], boroughs));
+	}
+
 	SFVisualizer.drawData(filtDataset, StdDraw.BLACK, 1000);
     }
     
@@ -47,10 +58,6 @@ public class SFVisualizer
         
     public static SFDataPt[] filterByBoroughs(SFDataPt[] dataset, 
 					      String[] boroughs){
-	if(boroughs.length == 0){
-	    return dataset;
-	}
-
 	boroughs = toUpperCase(boroughs);
 	
 	int countBorough = 0;
@@ -79,22 +86,16 @@ public class SFVisualizer
     }
 
     public static SFDataPt[] filterByRaces(SFDataPt[] dataset, String[] races){
-	String[] shortRaces = convertRace(races);
-
-	if(races.length == 0){
-	    return dataset;
-	}
-
 	int countRace = 0;
 	for(int i = 0; i < dataset.length; i++){
-	    if(isInArr(shortRaces, dataset[i].getRace())){
+	    if(isInArr(races, dataset[i].getRace())){
 		countRace++;
 	    }
 	}
 
 	SFDataPt[] filtArr = new SFDataPt[countRace];
 	for(int i = 0, x = 0; i < dataset.length; i++){
-	    if(isInArr(shortRaces, dataset[i].getRace())){
+	    if(isInArr(races, dataset[i].getRace())){
 		filtArr[x] = dataset[i];
 		x++;
 	    }

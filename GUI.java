@@ -21,28 +21,25 @@ public class GUI implements ActionListener {
 	new ArrayList<JCheckBox>();
     private static JFrame frame;
 
-    final static String LOOKANDFEEL = "GTK+";
+    final static String LOOKANDFEEL = "System";
 
     public Component createComponents() {
         JButton button = new JButton("Confirm");
         button.setMnemonic(KeyEvent.VK_I);
         button.addActionListener(this);
 	String[] raceEx = {"American Indian/Alaskan Native", "Asian/Pacific Islander", "Black", "Black-Hispanic", "White", "White-Hispanic", "Unknown", "Other"};
-	JComboBox raceDropdown = new JComboBox(raceEx);
 	for(int i = 0; i < raceEx.length; i++){
 	    raceCheckBox.add(new JCheckBox(raceEx[i]));
 	    raceCheckBox.get(i).setSelected(false);
 	}
 	
 	String[] boroughEx = {"Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"};
-	JComboBox boroughDropdown = new JComboBox(boroughEx);
 	for(int i = 0; i < boroughEx.length; i++){
 	    boroughCheckBox.add(new JCheckBox(boroughEx[i]));
 	    boroughCheckBox.get(i).setSelected(false);
 	}
 	
 	String[] searchVariableEx = {"conFound", "conPistol", "conRifle", "conAssaultWeap", "conKnife", "conMachineGun", "conOther", "pfUsed", "pfHands", "pfWall", "pfGround", "pfWeapDrawn", "pfWeapPoint", "pfBaton", "pfHandcuff", "pfPepperSpray", "pfOther", "wasArrested", "wasSummoned", "wasFrisked", "wasSearched"};
-	JComboBox searchVariableDropdown = new JComboBox(searchVariableEx);
 	for(int i = 0; i < searchVariableEx.length; i++){
 	    searchVariableCheckBox.add(new JCheckBox(searchVariableEx[i]));
 	    searchVariableCheckBox.get(i).setSelected(false);

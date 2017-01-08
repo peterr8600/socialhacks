@@ -6,89 +6,33 @@ import java.awt.Color;
 public class SFVisualizer
 {   
     public static void main(String[] arg) throws IOException{
-		String[] races = {"Black"};
-		for(String hi : races){
-			System.out.println(hi);
-		}
-			
-		visualizeData(new String[0], new String[0], new String[0]);
+	
     }
 
-    /**
-     * Reads in a Stop and Frisk data set from a file and visualizes
-     * the data set.
-     */
-    public static void visualizeData(String[] r, String[] b, String[] s) throws IOException
+    public static void visualizeData(String[] r, String[] b, String[] s) 
+	throws IOException
     {        
-        // Get all the data from the file
-        //SFDataPt[] dataSet2013 = SFFileParser.parseFile("2013_cleaned.csv");
-        //SFDataPt[] dataSet2014 = SFFileParser.parseFile("2014_cleaned.csv");
 	SFDataPt[] dataset = 
 	    SFFileParser.parseFile("2014_cleaned.csv");
 	String[] boroughs = b;
 	String[] races = r;
 	String[] searchVariables = s;
-        //SFDataPt[] dataSet = appendArr(dataSet2013, dataSet2014);
-        
-        // New dataSet with only blacks and hispanics
-        //SFDataPt[] filteredDataset = filterByRaces(dataset, races);
-		//System.out.println(filteredDataset.length);
-		//filteredDataset = filterByBoroughs(filteredDataset, boroughs);
-		//filteredDataset = filterBySearchVar(filteredDataset, searchVariables);
-		SFDataPt[] datasetFiltByRace = filterByRaces(dataset, races);
+       	
+	SFDataPt[] filtDataset = filterByRaces(dataset, races);
+	filtDataset = filterByBoroughs(filtDataset, boroughs);
+	filtDataset = filterBySearchVar(filtDataset, searchVariables);
 	
 	//StdDraw SetScales
-		int minX = SFVisualizer.getMinXCoord(dataset);
-        int maxX = SFVisualizer.getMaxXCoord(dataset);
-        int minY = SFVisualizer.getMinYCoord(dataset);
-        int maxY = SFVisualizer.getMaxYCoord(dataset);
-        StdDraw.setXscale(minX, maxX);
-        StdDraw.setYscale(minY, maxY);
-
-
-	    //SFVisualizer.drawData(datasetFiltByRace, StdDraw.BLACK, 1000);
-		//StdDraw.save("image/image0.png");
-        SFVisualizer.drawData(datasetFiltByRace, StdDraw.BLACK, 1000);
-		//SFVisualizer.drawData(datasetFiltByRace, StdDraw.GREEN, 1000);
-		//StdDraw.save("image/image1.png");
-
+	int minX = SFVisualizer.getMinXCoord(dataset);
+	int maxX = SFVisualizer.getMaxXCoord(dataset);
+	int minY = SFVisualizer.getMinYCoord(dataset);
+	int maxY = SFVisualizer.getMaxYCoord(dataset);
+	StdDraw.setXscale(minX, maxX);
+	StdDraw.setYscale(minY, maxY);
+	
+	SFVisualizer.drawData(filtDataset, StdDraw.BLACK, 1000);
     }
     
-    /**public static SFDataPt[] filterByMY(SFDataPt[] dataSet, int month, 
-					int year){
-        int count = 0;
-        for(int i = 0; i < dataSet.length; i++){
-            if(dataSet[i].getMonth() == month && dataSet[i].getYear() == year){
-                count++;
-            }
-        }
-        
-        SFDataPt[] retArr = new SFDataPt[count];
-        for(int i = 0, x = 0; i < dataSet.length; i++){
-            if(dataSet[i].getMonth() == month && dataSet[i].getYear() == year){
-                retArr[x] = dataSet[i];
-                x++;
-            }
-        }
-        return retArr;
-	}**/
-    
-    public static SFDataPt[] appendArr(SFDataPt[] arr1, SFDataPt[] arr2){
-        SFDataPt[] retArr = new SFDataPt[arr1.length + arr2.length];
-        for(int i = 0; i < arr1.length; i++){
-            retArr[i] = arr1[i];
-        }
-        for(int i = 0; i < arr2.length; i++){
-            retArr[arr1.length + i] = arr2[i];
-        }
-        
-        return retArr;
-    }
-    
-    /**
-     * Given an array of SFDataPts, a color, and a time (measured in
-     * milliseconds), draw the points on the cavnas.
-     */
     public static void drawData(SFDataPt[] dataSet, Color c, int timeMil)
     {
         StdDraw.show(0);
@@ -100,44 +44,14 @@ public class SFVisualizer
 	    }
         StdDraw.show(timeMil);
     }
-    
-    /**
-     * Given an array of SFDataPts and a borough, returns an array of only the
-     * SFDataPts that occurred in that boroguh.
-     * 
-     * @param dataSet an array of SFDataPts
-     * @param borough the filtering borough
-     *   Precondition: borough should be "BRONX", "BROOKLYN", "MANHATTAN",
-     *   "QUEENS", or "STATEN ISLAND"
-     */
-    /**public static SFDataPt[] filterByBorough(SFDataPt[] dataSet, String borough)
-    {
-        if(borough.isEmpty()){
-            return dataSet;
-        }
         
-        int countBorough = 0;
-        for(int i = 0; i < dataSet.length; i++){
-            if(dataSet[i].inBorough(borough)){
-                countBorough++;
-            }
-        }
-        
-        SFDataPt[] filtArr = new SFDataPt[countBorough];
-        for(int i = 0, x = 0; i < dataSet.length; i++){
-            if(dataSet[i].inBorough(borough)){
-                filtArr[x] = dataSet[i];
-                x++;
-            }
-        }
-        return filtArr;
-	}**/
-
     public static SFDataPt[] filterByBoroughs(SFDataPt[] dataset, 
 					      String[] boroughs){
 	if(boroughs.length == 0){
 	    return dataset;
 	}
+
+	boroughs = toUpperCase(boroughs);
 	
 	int countBorough = 0;
 	for(int i = 0; i < dataset.length; i++){
@@ -154,6 +68,14 @@ public class SFVisualizer
 	    }
 	}
 	return filtArr;
+    }
+
+    public static String[] toUpperCase(String[] b){
+	String[] arr = new String[b.length];
+	for(int i = 0; i < arr.length; i++){
+	    arr[i] = b[i].toUpperCase();
+	}
+	return arr;
     }
 
     public static SFDataPt[] filterByRaces(SFDataPt[] dataset, String[] races){
@@ -180,7 +102,7 @@ public class SFVisualizer
 	return filtArr;
     }
 	
-	public static SFDataPt[] filterBySearchVar(SFDataPt[] dataset, 
+    public static SFDataPt[] filterBySearchVar(SFDataPt[] dataset, 
 					      String[] SV){
 	if(SV.length == 0) {
 		return dataset;
@@ -348,8 +270,6 @@ public class SFVisualizer
 
     public static String convertRace(String big){
 	big = big.toUpperCase();
-	//Amer Indian/Alaskan Nat, Asian/Pac Islander, Black, Black-Hisp, 
-	//White, White-Hisp, Unknown, Other
 	if(big.equals("AMERICAN INDIAN/ALASKAN NATIVE")){
 	    return "I";
 	}
@@ -374,11 +294,6 @@ public class SFVisualizer
 	return "Z";
     }
     
-    /**
-     * Returns the minimum x-coordinate contained in the dataSet.
-     * 
-     * @param dataSet An array of SFDataPts
-     */
     public static int getMinXCoord(SFDataPt[] dataSet)
     {
         int min = Integer.MAX_VALUE;
@@ -388,11 +303,6 @@ public class SFVisualizer
         return min;
     }
     
-    /**
-     * Returns the minimum y-coordinate contained in the dataSet.
-     * 
-     * @param dataSet An array of SFDataPts
-     */
     public static int getMinYCoord(SFDataPt[] dataSet)
     {
         int min = Integer.MAX_VALUE;
@@ -402,11 +312,6 @@ public class SFVisualizer
         return min;
     }
     
-    /**
-     * Returns the maximum x-coordinate contained in the dataSet.
-     * 
-     * @param dataSet An array of SFDataPts
-     */
     public static int getMaxXCoord(SFDataPt[] dataSet)
     {
         int max = Integer.MIN_VALUE;
@@ -416,11 +321,6 @@ public class SFVisualizer
         return max;
     }
     
-    /**
-     * Returns the maximum y-coordinate contained in the dataSet.
-     * 
-     * @param dataSet An array of SFDataPts
-     */
     public static int getMaxYCoord(SFDataPt[] dataSet)
     {
         int max = Integer.MIN_VALUE;

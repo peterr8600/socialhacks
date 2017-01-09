@@ -37,7 +37,7 @@ public class SFVisualizer
 	StdDraw.setXscale(minX, maxX);
 	StdDraw.setYscale(minY, maxY);
 	
-	for(int i = 0; i < races.length; i++){
+	for(int i = 0; i < races.length && i < r.length; i++){
 	    System.out.println(SFStatistics.getPctPop(dataset, r[i], races[i], boroughs));
 	}
 
